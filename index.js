@@ -8,8 +8,9 @@ const mongoose = require('mongoose');
 const options = {
   useNewUrlParser: true,
   useCreateIndex: true,
+  useUnifiedTopology: true,
 };
-mongoose.connect(process.env.MONGODB_URI, options);
+mongoose.connect('mongodb://localhost:27017/oauth', options);
 
 // START SERVER
-require('./src/server.js').start(process.env.PORT);
+require('./server.js').start(process.env.PORT);

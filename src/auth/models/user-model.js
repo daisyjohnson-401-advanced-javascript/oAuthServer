@@ -14,7 +14,7 @@ const users = new mongoose.Schema({
 // *****************
 users.pre('save', async function() {
   if(this.isModified('password')) {
-    this.paswword = await bcrypt.hash(this.password, 10)
+    this.password = await bcrypt.hash(this.password, 10)
       .then(hashedPass => {
         this.password = hashedPass;
       });
@@ -46,15 +46,17 @@ users.methods.generateToken = function(){
 };
 
 // create user from email OAuth
-users.statics.createFromOauth = function(email) {
+users.statics.createFromOauth = async function(email) {
   if(!email){
     return Promise.reject('Validation Error');
   }
-  const user = this.findOne({ email });
+  let query = { email };
+  const user = await this.findOne(query);
+
   if(user){
     return user;
   } else {
-    return this.create({ username:email, password:'none', email:email});
+    return this.create({ username: email, password: 'none', email: email});
   }
 };
 

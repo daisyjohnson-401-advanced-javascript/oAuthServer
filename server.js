@@ -6,9 +6,9 @@ const cors = require('cors');
 const morgan = require('morgan');
 
 // Esoteric resources
-const errorHandler = require('../src/middleware/500.js');
-const notFound = require('../src/middleware/404.js');
-const authRouter = require('./auth/router.js');
+const errorHandler = require('./src/middleware/500.js');
+const notFound = require('./src/middleware/404.js');
+const authRouter = require('./src/auth/router.js');
 
 // Prepare express app
 const app = express();
@@ -25,7 +25,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(authRouter);
 
 // Catch alls
-app.use(notFound);
+// 404 error
+app.use('*', notFound);
+
+//500 Errors
 app.use(errorHandler);
 
 module.exports = {
