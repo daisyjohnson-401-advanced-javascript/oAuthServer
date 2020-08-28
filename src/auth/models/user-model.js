@@ -14,10 +14,7 @@ const users = new mongoose.Schema({
 // *****************
 users.pre('save', async function() {
   if(this.isModified('password')) {
-    this.password = await bcrypt.hash(this.password, 10)
-      .then(hashedPass => {
-        this.password = hashedPass;
-      });
+    this.password = await bcrypt.hash(this.password, 10);
   }
 });
 
@@ -41,9 +38,20 @@ users.methods.generateToken = function(){
     username: this.username,
     role: this.role,
   };
-  const signed = jwt.sign(tokenData, process.env.SECRET);
+  let options = {};
+
+  const signed = jwt.sign(tokenData, process.env.SECRET, options);
   return signed;
 };
+
+//LAB 13 AUTHENTICATE TOKEN
+users.statics.authenticateToken = function (token) {
+
+  let parsedToken = jwt.verify(token, process.env.SECRET);
+
+  return this.findById(parsedToken.id);
+};
+
 
 // create user from email OAuth
 users.statics.createFromOauth = async function(email) {
