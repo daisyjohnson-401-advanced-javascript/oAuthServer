@@ -38,7 +38,7 @@ module.exports = async function authorize(req, res, next) {
 
 // Exchange the code received on the initial request for a token from the provider
 async function exchangeCodeForToken(code){
-  let tokenResponse = await(await superagent.post(tokenServerUrl)).setEncoding({
+  let tokenResponse = await superagent.post(tokenServerUrl).send({
     code: code,
     client_id: CLIENT_ID,
     client_secret: CLIENT_SECRET,
@@ -55,7 +55,7 @@ async function getRemoteUserInfo(token) {
   let userResponse =
     await superagent.get(remoteAPI)
       .set('user-agent', 'express-app')
-      .set('Authorization', 'token ${token}');
+      .set('Authorization', `token ${token}`);
   
   let user = userResponse.body;
 
@@ -65,15 +65,15 @@ async function getRemoteUserInfo(token) {
 
 // Create/Retrieve an account from our Mongo users database matching ther user's account (email or username) using the users model 
 async function getUser(remoteUser) {
-  let userRecord = {
-    username: remoteUser.login,
-    password: 'oauthpassword',
-  };
+  // let userRecord = {
+  //   username: remoteUser.login,
+  //   password: 'oauthpassword',
+  // };
 
-  let user = await User.save(userRecord);
+  let user = await User.createFromOauth(remoteUser.login);
   
   // Generate a token using the users model
-  let token = User.generateToken(user);
+  let token = user.generateToken();
 
   // Add the token and the user record to the request object
   return [user, token];
