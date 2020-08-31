@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
 
     //LAB 14
     req.user = {
-      usernmae: validUser.username,
+      username: validUser.username,
       fullname: validUser.fullname,
       email: validUser.email,
       capabilities: validUser.capabilities,
