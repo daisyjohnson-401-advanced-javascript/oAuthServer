@@ -39,7 +39,8 @@ router.get('/oauth', oauthMiddleWare, (req, res) => {
 });
 
 // GET ROUTE FOR /users. RETURNS A JSON OBJECT WITH ALL USERS
-router.get('/users', (req, res) => {
-  res.status(200).json(req.user);
-});
+// router.get('/users', (req, res) => {
+//   res.status(200).json(req.user);
+// });
+
 module.exports = router;

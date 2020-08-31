@@ -8,21 +8,22 @@ const router = express.Router();
 //   res.status(200).send('access allowed');
 // });
 
-router.get('/read', bearerAuthMiddleware, permissions('read'), () => {
+//anyone can get in
+//doesn't need a token
+router.get('/public', routeHandler);
 
-});
+router.get('/private', bearerAuthMiddleware, routeHandler);
 
-router.get('/add', bearerAuthMiddleware, permissions('create'), () => {
-  
-});
+// router.get('/read', bearerAuthMiddleware, permissions('read'),routeHandler);
 
-router.get('/change', bearerAuthMiddleware, permissions('update'), () => {
-  
-});
+// router.get('/create', bearerAuthMiddleware, permissions('create'), routeHandler);
 
-router.get('/remove', bearerAuthMiddleware, permissions('delete'), () => {
-  
-});
+// router.get('/update', bearerAuthMiddleware, permissions('update'), routeHandler);
 
+// router.get('/delete', bearerAuthMiddleware, permissions('delete'), routeHandler);
+
+function routeHandler(req,res){
+  res.status(200).send('Access Granted');
+}
 
 module.exports = router;
