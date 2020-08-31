@@ -1,16 +1,17 @@
 'use strict';
 
-require('dotenv').config();
-
-// DB server
 
 const mongoose = require('mongoose');
+require('dotenv').config();
+// DB server
+
+
 const options = {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
 };
-mongoose.connect('mongodb://localhost:27017/oauth', options);
+mongoose.connect(process.env.MONGODB_URI, options);
 
 // START SERVER
 require('./server.js').start(process.env.PORT);

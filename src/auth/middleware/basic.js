@@ -5,7 +5,9 @@ const User = require('../models/user-model.js');
 
 module.exports = async (req, res, next) => {
 
-  const errorObj = { 'message': 'Invalid User ID/Password', 'status': 401, 'statusMessage': 'Unauthorized' };
+  const errorObj = { status: 401, statusMessage: 'Unauthorized', message: 'Invalid User ID/Password' };
+
+  console.log('HEADER AUTHHHHH', req.headers.authorization);
   //Pull out just the encoded part by splitting the header into an array
   let encodedPair = req.headers.authorization.split(' ').pop();
 

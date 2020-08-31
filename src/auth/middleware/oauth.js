@@ -1,13 +1,14 @@
 'use strict';
 
 const superagent = require('superagent');
-const User = require('../models/user-model.js');
+const users = require('../models/user-model.js');
+require('dotenv').config();
 
 const tokenServerUrl = 'https://github.com/login/oauth/access_token';
 const remoteAPI = 'http://api.github.com/user';
-const API_SERVER = 'http://localhost:3000/oauth';
 const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
+const API_SERVER = 'http://localhost:3000/oauth';
 
 //OAUTH FUNCTION
 module.exports = async function authorize(req, res, next) {
@@ -65,12 +66,15 @@ async function getRemoteUserInfo(token) {
 
 // Create/Retrieve an account from our Mongo users database matching ther user's account (email or username) using the users model 
 async function getUser(remoteUser) {
-  // let userRecord = {
-  //   username: remoteUser.login,
-  //   password: 'oauthpassword',
-  // };
+  let userRecord = {
+    username: remoteUser.login,
+    password: 'oauthpassword',
+    email: remoteUser.email,
+    name: remoteUser.name,
+  };
 
-  let user = await User.createFromOauth(remoteUser.login);
+  console.log('INSIDE GET USER');
+  let user = await users.createFromOauth(userRecord);
   
   // Generate a token using the users model
   let token = user.generateToken();

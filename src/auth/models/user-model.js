@@ -11,6 +11,7 @@ const users = new mongoose.Schema({
   role:{ type: String, required:true, default: 'user', enum: ['admin', 'editor', 'user']},
 });
 
+
 // *****************
 users.pre('save', async function() {
   if(this.isModified('password')) {
