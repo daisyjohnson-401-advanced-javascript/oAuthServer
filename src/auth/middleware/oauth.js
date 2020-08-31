@@ -66,18 +66,14 @@ async function getRemoteUserInfo(token) {
 
 // Create/Retrieve an account from our Mongo users database matching ther user's account (email or username) using the users model 
 async function getUser(remoteUser) {
-  let userRecord = {
-    username: remoteUser.login,
-    password: 'oauthpassword',
-    email: remoteUser.email,
-    name: remoteUser.name,
-  };
 
   console.log('INSIDE GET USER');
-  let user = await users.createFromOauth(userRecord);
+  let user = await users.createFromOauth(remoteUser.login);
+  console.log('MADE IT PAST CREATE FROM OAUTH');
   
   // Generate a token using the users model
   let token = user.generateToken();
+  console.log('USER TOKEN', token);
 
   // Add the token and the user record to the request object
   return [user, token];

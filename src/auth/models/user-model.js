@@ -19,6 +19,34 @@ users.pre('save', async function() {
   }
 });
 
+// create user from email OAuth
+users.statics.createFromOauth = async function(username) {
+  if(!username){
+    return Promise.reject('Validation Error');
+  }
+  return this.findOne({ username })
+    .then(user => {
+      if (!user) { throw new Error('User Not Found :('); }
+      console.log('Welcome Back', user.username);
+      return user;
+    })
+    .catch(error => {
+      console.log('Creating new user');
+      let password = 'randomPassword';
+      
+      return this.create({ username, password});
+      
+    });
+  // })
+  // let query = { username };
+  // const user = await this.findOne(query);
+
+  // if(user){
+  //   return user;
+  // } else {
+  //   return this.create({ username: username, password: 'none', email: username});
+  // }
+};
 // Authenticate Basic Method
 users.statics.authenticateBasic = async function (username, password) {
   const user = await this.findOne({ username });
@@ -34,13 +62,14 @@ users.methods.comparePassword = async function(plainPassword) {
 
 //Generate a token
 users.methods.generateToken = function(){
+  console.log('IN GENERATE TOKEN');
   let tokenData = {
     id: this._id,
     username: this.username,
     role: this.role,
   };
   let options = {};
-
+  console.log('MAKE IT THROUGH GENERATE TOKEN');
   const signed = jwt.sign(tokenData, process.env.SECRET, options);
   return signed;
 };
@@ -51,22 +80,6 @@ users.statics.authenticateToken = function (token) {
   let parsedToken = jwt.verify(token, process.env.SECRET);
 
   return this.findById(parsedToken.id);
-};
-
-
-// create user from email OAuth
-users.statics.createFromOauth = async function(email) {
-  if(!email){
-    return Promise.reject('Validation Error');
-  }
-  let query = { email };
-  const user = await this.findOne(query);
-
-  if(user){
-    return user;
-  } else {
-    return this.create({ username: email, password: 'none', email: email});
-  }
 };
 
 module.exports = mongoose.model('users', users);
