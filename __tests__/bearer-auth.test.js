@@ -4,6 +4,9 @@ require('dotenv').config();
 require('@code-fellows/supergoose');
 const auth = require('../src/auth/middleware/bearer.js');
 
+const User = require('../src/auth/models/user-model.js');
+jest.mock('../src/auth/models/user-model.js');
+
 it('should fail with missing headers', async () => {
   let req = {
     headers: {
@@ -37,6 +40,10 @@ it('should fail with bad token', async () => {
 });
 
 it('should carry on with good token', async () => {
+  
+  User.authenticateToken.mockImplementation(() => {
+    return {};
+  });
 
   // Can be convenient to store a TEST_TOKEN in environment
   // But you will have to refresh it (aka grab a new one) if/when it expires

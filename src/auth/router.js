@@ -16,7 +16,7 @@ router.post('/signup', async (req, res, next) => {
     token,
     user,
   };
-  
+
   res.status(200).send(resultBody);
 });
 
@@ -31,17 +31,16 @@ router.post('/signin', basicAuth, (req, res) => {
     token: req.token,
     user: req.user,
   });
-  
+
 });
-
-// GET ROUTE FOR /users. RETURNS A JSON OBJECT WITH ALL USERS
-// router.get('/users', (req, res) => {
-//   res.status.send(req.token);
-
-// });
 
 router.get('/oauth', oauthMiddleWare, (req, res) => {
   res.status(200).send(req.token);
 });
+
+// GET ROUTE FOR /users. RETURNS A JSON OBJECT WITH ALL USERS
+// router.get('/users', (req, res) => {
+//   res.status(200).json(req.user);
+// });
 
 module.exports = router;

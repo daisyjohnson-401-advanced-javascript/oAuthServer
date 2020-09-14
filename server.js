@@ -1,5 +1,7 @@
 'use strict';
 
+'use strict';
+
 // Third Party Resources
 const express = require('express');
 const cors = require('cors');
